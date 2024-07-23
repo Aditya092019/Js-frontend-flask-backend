@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .start{
+            text-align:  center;
+            padding-top: 50px;
+        }
+       button {
+            color: coral;
+            background-color: aqua; 
+            border-radius: 10px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="start">
+        <h1>Home Page</h1>
+        <div>
+            <button type="button" id="signupbtn">Register Page</button>
+            <button type="button" id="signinbtn">Login Page</button>
+        </div>
+    </div> 
+<script>
+    document.getElementById('signinbtn').addEventListener('click', function() {
+        window.location.href = 'login.html';})
+
+        document.getElementById('signupbtn').addEventListener('click', function() {
+            window.location.href = 'register.html';})   
+</script>       
+</body>
+</html>

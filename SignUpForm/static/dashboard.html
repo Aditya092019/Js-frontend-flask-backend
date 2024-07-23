@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+           .start{
+            text-align:  center;
+           }
+           button {
+            color: aqua;
+            background-color: coral; 
+            border-radius: 10px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="start">
+        <h1> successful</h1>
+        <div>
+            <button type="button" id="home">Home Page</button>
+            <button type="button" onclick="getData()">Fetch User</button>
+            <h2 id="error"></h2>
+            <p id="result"></p>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>   
+<script>
+    
+        document.getElementById('home').addEventListener('click', function() {
+            localStorage.removeItem('authToken');
+            window.location.href = 'home.html';
+            }) 
+             
+            
+                async function getData() {
+                    const token = localStorage.getItem('authToken');
+            let decoded;
+
+            try {
+                // Try to decode the token
+                decoded = jwt_decode(token);
+                console.log(decoded);
+            } catch (error) {
+                // Handle invalid token error
+                console.error('Invalid token specified:', error.message);
+                const errorDiv = document.getElementById("error");
+                errorDiv.innerHTML = "404 Page Not Found";
+
+                const resultDiv = document.getElementById("result");
+                resultDiv.innerHTML = "The page you were looking for does not exist!";
+                return; // Exit the function if token is invalid
+            }
+
+            if (decoded) {
+                const url = "http://127.0.0.1:5000/api/allusers";
+
+                try {
+                    const response = await fetch(url, {
+                        method: 'GET', // Specify the request method
+                        headers: {
+                            'Authorization': localStorage.getItem('authToken')
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Response status: ${response.status}`);
+                    }
+
+                    const json = await response.json();
+                    const resultDiv = document.getElementById("result");
+                    resultDiv.innerHTML = JSON.stringify(json, null, 2); // Display the JSON data
+                } catch (error) {
+                    console.error('Error fetching data:', error.message);
+                }
+             }
+            }
+     
+          
+
+
+</script>     
+</body>
+</html>

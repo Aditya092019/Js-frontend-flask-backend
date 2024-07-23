@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register and Login Form</title>
+    <link rel ="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/eb7772ff63.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class ="container">
+      <div class="form-box">
+          <h1 id="title">Login</h1>
+          <form id="dataForm" onsubmit="validateForm(e)" methods="POST">
+            <div class="input-group">
+                <div class="input-field">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" id="email" placeholder="Email" required>
+                </div>
+                <div class="input-field">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="password" placeholder="Password" required>
+                </div>
+                <!-- <p>Lost password <a href="#">Click Here!</a></p> -->
+                <p id = "demo"></p>
+            </div>
+            <div class="btn-field">
+                <button type="button" id="signupbtn" class="disable">Register</button>
+                <button type="button" id="signinbtn">Login</button>
+            </div>
+          </form>
+       </div>
+    </div>      
+<script>
+   document.getElementById('signupbtn').addEventListener('click', function() {
+    window.location.href = 'register.html';})
+
+
+    
+      
+    document.getElementById('signinbtn').addEventListener('click',(e)=>validateForm(e)) 
+    
+          async  function validateForm(e){
+            event.preventDefault();
+            const password = document.getElementById('password').value;
+            const email = document.getElementById('email').value;
+            
+            if( email=="" || password == ""){
+                 const error = document.getElementById("demo")
+                 error.innerHTML = "All fields are required";
+                 event.preventDefault();
+            }else{
+                const url="http://127.0.0.1:5000/login"
+                console.log(password)
+                await fetch(url, {
+                method: 'POST', // Specify the request method
+                headers: {
+                'Content-Type': 'application/json', // Set the content type to JSON
+                'Authorization': 'Bearer<token>'
+                 },
+             
+               body: JSON.stringify({ email: email, password: password }) // Convert the data to a JSON string
+            })
+              .then(response => {
+              if (!response.ok) {
+              // Handle HTTP errors
+               const error = document.getElementById("demo")
+              error.innerHTML = "@ Invalid email or password"
+              throw new Error('Network response was not ok');
+             }
+              return response.json(); 
+            })
+            .then(data => {
+              console.log("........12345.........");
+              console.log('Login Successful:', data);
+              const token = data.token;
+              localStorage.setItem('authToken', token); 
+              window.location.replace('dashboard.html');
+              return data;
+             })
+            .catch(error => {
+            console.error('Error:', error);
+            });
+            }
+        }
+      
+        
+        
+            
+</script>
+</body>
+</html>
